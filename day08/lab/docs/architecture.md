@@ -18,7 +18,7 @@
 ```
 
 **Mô tả ngắn gọn:**
-> TODO: Mô tả hệ thống trong 2-3 câu. Nhóm xây gì? Cho ai dùng? Giải quyết vấn đề gì?
+> Điểm cốt lõi của RAG pipeline là biến kiến thức doanh nghiệp (các SOP, policy) vốn tĩnh lẻ tẻ thành dạng searchable ngữ nghĩa (Vector Store). Hệ thống giúp nhân sự, support team hoặc agent tra cứu theo câu hỏi thuần thục và đưa ra đáp án dựa trên context có sẵn, đính kèm Citation.
 
 ---
 
@@ -27,22 +27,22 @@
 ### Tài liệu được index
 | File | Nguồn | Department | Số chunk |
 |------|-------|-----------|---------|
-| `policy_refund_v4.txt` | policy/refund-v4.pdf | CS | TODO |
-| `sla_p1_2026.txt` | support/sla-p1-2026.pdf | IT | TODO |
-| `access_control_sop.txt` | it/access-control-sop.md | IT Security | TODO |
-| `it_helpdesk_faq.txt` | support/helpdesk-faq.md | IT | TODO |
-| `hr_leave_policy.txt` | hr/leave-policy-2026.pdf | HR | TODO |
+| `policy_refund_v4.txt` | policy/refund-v4.pdf | CS | Tính toán tự động |
+| `sla_p1_2026.txt` | support/sla-p1-2026.pdf | IT | Tính toán tự động |
+| `access_control_sop.txt` | it/access-control-sop.md | IT Security | Tính toán tự động |
+| `it_helpdesk_faq.txt` | support/helpdesk-faq.md | IT | Tính toán tự động |
+| `hr_leave_policy.txt` | hr/leave-policy-2026.pdf | HR | Tính toán tự động |
 
 ### Quyết định chunking
 | Tham số | Giá trị | Lý do |
 |---------|---------|-------|
-| Chunk size | TODO tokens | TODO |
-| Overlap | TODO tokens | TODO |
-| Chunking strategy | Heading-based / paragraph-based | TODO |
+| Chunk size | 500 ký tự | Tối ưu độ dài context cho Chroma DB |
+| Overlap | 50 ký tự | Đảm bảo không bị mất thông tin giữa 2 chunks |
+| Chunking strategy | Token-based / Recursive | Dễ triển khai, tối ưu embedding nhanh |
 | Metadata fields | source, section, effective_date, department, access | Phục vụ filter, freshness, citation |
 
 ### Embedding model
-- **Model**: TODO (OpenAI text-embedding-3-small / paraphrase-multilingual-MiniLM-L12-v2)
+- **Model**: text-embedding-3-small (hoặc local)
 - **Vector store**: ChromaDB (PersistentClient)
 - **Similarity metric**: Cosine
 
@@ -61,15 +61,14 @@
 ### Variant (Sprint 3)
 | Tham số | Giá trị | Thay đổi so với baseline |
 |---------|---------|------------------------|
-| Strategy | TODO (hybrid / dense) | TODO |
-| Top-k search | TODO | TODO |
-| Top-k select | TODO | TODO |
-| Rerank | TODO (cross-encoder / MMR) | TODO |
-| Query transform | TODO (expansion / HyDE / decomposition) | TODO |
+| Strategy | Hybrid | Tích hợp Sparse Match (BM25) bắt exact keywords |
+| Top-k search | 10 | Không đổi |
+| Top-k select | 3 | Không đổi |
+| Rerank | Cross-Encoder | Bật module reranker để đánh giá lại text chunk |
+| Query transform | None | Không áp dụng |
 
 **Lý do chọn variant này:**
-> TODO: Giải thích tại sao chọn biến này để tune.
-> Ví dụ: "Chọn hybrid vì corpus có cả câu tự nhiên (policy) lẫn mã lỗi và tên chuyên ngành (SLA ticket P1, ERR-403)."
+> Chọn Hybrid kết hợp Rerank nhằm lấy lại được các keyword kỹ thuật và mã lỗi dễ bị embedding Dense bỏ sót, sau đó Cross-encoder sẽ đẩy thông tin relevance nhất lên top 3 để giảm nhiễu trước LLM.
 
 ---
 
@@ -96,7 +95,7 @@ Answer:
 ### LLM Configuration
 | Tham số | Giá trị |
 |---------|---------|
-| Model | TODO (gpt-4o-mini / gemini-1.5-flash) |
+| Model | gpt-4o-mini |
 | Temperature | 0 (để output ổn định cho eval) |
 | Max tokens | 512 |
 
