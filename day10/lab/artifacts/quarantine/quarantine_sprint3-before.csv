@@ -1,0 +1,2 @@
+chunk_id,doc_id,chunk_text,effective_date,exported_at,reason,effective_date_normalized
+6,hr_leave_policy,Nhân viên dưới 3 năm kinh nghiệm được 10 ngày phép năm (bản HR 2025).,2025-01-01,2026-04-10T08:00:00,stale_hr_policy_effective_date,2025-01-01
