@@ -1,9 +1,11 @@
 # Data contract — Lab Day 10 (tiếp nối artifact CS + IT Helpdesk)
 # Sinh viên bổ sung owner, SLA freshness, và nguồn canonical.
 
-version: "1.0"
+version: "1.1"
 dataset: "kb_chunk_export"
-owner_team: "__TODO__"
+owner_team: "data-engineering"
+owner_contact: "dunglk85@github"
+description: "Knowledge base chunk export — cleaned, validated, embedded vào ChromaDB phục vụ RAG retrieval."
 
 schema_cleaned:
   chunk_id:
@@ -55,17 +57,31 @@ quality_rules:
 freshness:
   measured_at: "publish"  # ingest | cleaned | publish
   sla_hours: 24
-  alert_channel: "__TODO__"
+  alert_channel: "slack:#data-quality-alerts"
+  escalation: "Nếu FAIL > 48h liên tiếp → escalate lên team lead qua email."
+  check_frequency: "mỗi pipeline run (trigger bởi cron hoặc manual)"
 
 canonical_sources:
   - path: "data/docs/policy_refund_v4.txt"
     doc_id: "policy_refund_v4"
+    owner: "CS Operations"
+    version: "v4"
+    note: "Source of truth cho chính sách hoàn tiền. Cửa sổ = 7 ngày làm việc."
   - path: "data/docs/sla_p1_2026.txt"
     doc_id: "sla_p1_2026"
+    owner: "IT Service Management"
+    version: "2026"
+    note: "SLA P1: first response 15 phút, resolution 4 giờ."
   - path: "data/docs/it_helpdesk_faq.txt"
     doc_id: "it_helpdesk_faq"
+    owner: "IT Helpdesk"
+    version: "latest"
+    note: "FAQ tổng hợp — cập nhật rolling. Lockout = 5 lần sai."
   - path: "data/docs/hr_leave_policy.txt"
     doc_id: "hr_leave_policy"
+    owner: "HR Department"
+    version: "2026"
+    note: "Chính sách nghỉ phép 2026. Canonical: 12 ngày phép/năm (<3 năm KN). Bản 2025 (10 ngày) phải bị quarantine."
 
 # Baseline allowlist export — nhóm mở rộng doc mới phải đồng bộ cleaning_rules + contract.
 allowed_doc_ids:
