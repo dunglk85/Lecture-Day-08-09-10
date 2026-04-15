@@ -112,5 +112,51 @@ def run_expectations(cleaned_rows: List[Dict[str, Any]]) -> Tuple[List[Expectati
         )
     )
 
+    # --- E7 (NEW): không còn migration/debug notes trong cleaned output ---
+    # metric_impact: nếu chunk chứa "bản sync cũ", "lỗi migration" → LLM trả lời chứa noise nội bộ
+    migration_markers = re.compile(r"(bản sync cũ|lỗi migration|ghi chú:.*migration)", re.IGNORECASE)
+    bad_migration = [
+        r
+        for r in cleaned_rows
+        if migration_markers.search(r.get("chunk_text") or "")
+    ]
+    ok7 = len(bad_migration) == 0
+    results.append(
+        ExpectationResult(
+            "no_migration_notes_in_cleaned",
+            ok7,
+            "halt",
+            f"migration_leak_count={len(bad_migration)}",
+        )
+    )
+
+    # --- E8 (NEW): exported_at không quá cũ (> 30 ngày) → cảnh báo dữ liệu stale ---
+    # metric_impact: completeness giảm nếu KB chứa chunk không còn reflect policy hiện hành
+    from datetime import datetime, timedelta, timezone
+    now = datetime.now(timezone.utc)
+    stale_cutoff = now - timedelta(days=30)
+    stale_chunks = []
+    for r in cleaned_rows:
+        exp_at = (r.get("exported_at") or "").strip()
+        if exp_at:
+            try:
+                dt = datetime.fromisoformat(exp_at.replace("Z", "+00:00"))
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                if dt < stale_cutoff:
+                    stale_chunks.append(r)
+            except (ValueError, TypeError):
+                pass  # format errors caught by cleaning rule R9
+    ok8 = len(stale_chunks) == 0
+    results.append(
+        ExpectationResult(
+            "exported_at_within_30d",
+            ok8,
+            "warn",
+            f"stale_export_count={len(stale_chunks)}",
+        )
+    )
+
     halt = any(not r.passed and r.severity == "halt" for r in results)
     return results, halt
+

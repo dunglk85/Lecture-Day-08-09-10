@@ -32,6 +32,25 @@ quality_rules:
   - id: "no_stale_refund_window"
     description: "Không được để chunk policy refund chứa cửa sổ 14 ngày (lệch so với v4 = 7 ngày)"
     severity: "halt"
+  # --- NEW RULES (nhóm bổ sung) ---
+  - id: "strip_cleaned_tags"
+    description: "Strip leftover [cleaned: ...] tags từ lần ingest trước — chống tag accumulation"
+    severity: "transform"
+    metric_impact: "faithfulness giảm nếu LLM đọc marker nội bộ"
+  - id: "quarantine_migration_notes"
+    description: "Quarantine chunk chứa migration/debug notes (bản sync cũ, lỗi migration)"
+    severity: "halt"
+    metric_impact: "answer_relevance giảm do noise nội bộ trong retrieval"
+  - id: "validate_exported_at_iso"
+    description: "exported_at phải đúng ISO 8601 datetime — quarantine nếu sai"
+    severity: "halt"
+    metric_impact: "freshness_sla check sai nếu exported_at lỗi format"
+  - id: "no_migration_notes_in_cleaned"
+    description: "Expectation halt: không còn migration note trong cleaned output"
+    severity: "halt"
+  - id: "exported_at_within_30d"
+    description: "Expectation warn: exported_at không được quá 30 ngày — cảnh báo dữ liệu stale"
+    severity: "warn"
 
 freshness:
   measured_at: "publish"  # ingest | cleaned | publish

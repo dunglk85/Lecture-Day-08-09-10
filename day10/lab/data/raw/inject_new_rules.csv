@@ -1,0 +1,11 @@
+chunk_id,doc_id,chunk_text,effective_date,exported_at
+1,policy_refund_v4,"Yêu cầu được gửi trong vòng 7 ngày làm việc kể từ thời điểm xác nhận đơn hàng.",2026-02-01,2026-04-10T08:00:00
+2,policy_refund_v4,"Yêu cầu hoàn tiền được chấp nhận trong vòng 14 ngày làm việc kể từ xác nhận đơn (ghi chú: bản sync cũ policy-v3 — lỗi migration).",2026-02-01,2026-04-10T08:00:00
+3,sla_p1_2026,"Ticket P1 có SLA phản hồi ban đầu 15 phút và resolution trong 4 giờ.",2026-02-01,2026-04-10T08:00:00
+4,it_helpdesk_faq,"Tài khoản bị khóa sau 5 lần đăng nhập sai liên tiếp.",2026-02-01,2026-04-10T08:00:00
+5,hr_leave_policy,"Nhân viên dưới 3 năm kinh nghiệm được 12 ngày phép năm theo chính sách 2026.",2026-02-01,2026-04-10T08:00:00
+6,it_helpdesk_faq,"FAQ bổ sung: đổi mật khẩu qua portal self-service có thể mất tối đa 24 giờ để đồng bộ toàn hệ thống.",2026-02-01,2026-04-10T08:00:00
+7,policy_refund_v4,"Chunk đã clean trước đó [cleaned: stale_refund_window] còn sót tag nội bộ.",2026-02-01,2026-04-10T08:00:00
+8,sla_p1_2026,"Ticket P2 SLA phản hồi 30 phút. Lưu ý: bản sync cũ từ hệ thống cũ.",2026-02-01,2026-04-10T08:00:00
+9,it_helpdesk_faq,"Hướng dẫn reset MFA qua email nội bộ.",2026-02-01,10/04/2026 08:00
+10,policy_refund_v4,"Hoàn tiền xử lý trong 3-5 ngày làm việc sau duyệt.",2026-02-01,2025-03-01T08:00:00

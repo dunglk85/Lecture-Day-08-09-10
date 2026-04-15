@@ -1,0 +1,4 @@
+chunk_id,doc_id,chunk_text,effective_date,exported_at,reason,exported_at_raw
+2,policy_refund_v4,Yêu cầu hoàn tiền được chấp nhận trong vòng 14 ngày làm việc kể từ xác nhận đơn (ghi chú: bản sync cũ policy-v3 — lỗi migration).,2026-02-01,2026-04-10T08:00:00,contains_migration_note,
+8,sla_p1_2026,Ticket P2 SLA phản hồi 30 phút. Lưu ý: bản sync cũ từ hệ thống cũ.,2026-02-01,2026-04-10T08:00:00,contains_migration_note,
+9,it_helpdesk_faq,Hướng dẫn reset MFA qua email nội bộ.,2026-02-01,10/04/2026 08:00,invalid_exported_at_format,10/04/2026 08:00

@@ -1,0 +1,14 @@
+{
+  "run_id": "inject-new-rules",
+  "run_timestamp": "2026-04-15T08:03:34.000139+00:00",
+  "raw_path": "data\\raw\\inject_new_rules.csv",
+  "raw_records": 10,
+  "cleaned_records": 7,
+  "quarantine_records": 3,
+  "latest_exported_at": "2026-04-10T08:00:00",
+  "no_refund_fix": false,
+  "skipped_validate": false,
+  "cleaned_csv": "artifacts\\cleaned\\cleaned_inject-new-rules.csv",
+  "chroma_path": "./chroma_db",
+  "chroma_collection": "day10_kb"
+}

@@ -3,6 +3,14 @@ Cleaning rules — raw export → cleaned rows + quarantine.
 
 Baseline gồm các failure mode mở rộng (allowlist doc_id, parse ngày, HR stale version).
 Sinh viên thêm ≥3 rule mới: mỗi rule phải ghi `metric_impact` (xem README — chống trivial).
+
+NEW RULES (nhóm bổ sung):
+  R7: Strip leftover [cleaned: ...] tags — chống tag accumulation khi re-ingest.
+      metric_impact: faithfulness giảm nếu LLM đọc được marker nội bộ.
+  R8: Quarantine chunks chứa migration/debug notes ("bản sync cũ", "lỗi migration").
+      metric_impact: answer_relevance giảm do retrieval trả về chunk chứa noise nội bộ.
+  R9: Validate exported_at ISO format — quarantine nếu không parse được.
+      metric_impact: freshness_sla check sai nếu exported_at lỗi format.
 """
 
 from __future__ import annotations
@@ -25,6 +33,9 @@ ALLOWED_DOC_IDS = frozenset(
 
 _ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _DMY_SLASH = re.compile(r"^(\d{2})/(\d{2})/(\d{4})$")
+_ISO_DATETIME = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}")
+_CLEANED_TAG = re.compile(r"\s*\[cleaned:\s*[^\]]*\]")
+_MIGRATION_NOTES = re.compile(r"(bản sync cũ|lỗi migration|ghi chú:.*migration)", re.IGNORECASE)
 
 
 def _norm_text(s: str) -> str:
@@ -115,6 +126,18 @@ def clean_rows(
             quarantine.append({**raw, "reason": "missing_chunk_text"})
             continue
 
+        # --- R8 (NEW): quarantine chunks chứa migration/debug notes ---
+        if _MIGRATION_NOTES.search(text):
+            quarantine.append({**raw, "reason": "contains_migration_note"})
+            continue
+
+        # --- R9 (NEW): validate exported_at ISO datetime format ---
+        if exported_at and not _ISO_DATETIME.match(exported_at):
+            quarantine.append(
+                {**raw, "reason": "invalid_exported_at_format", "exported_at_raw": exported_at}
+            )
+            continue
+
         key = _norm_text(text)
         if key in seen_text:
             quarantine.append({**raw, "reason": "duplicate_chunk_text"})
@@ -129,6 +152,9 @@ def clean_rows(
                     "7 ngày làm việc",
                 )
                 fixed_text += " [cleaned: stale_refund_window]"
+
+        # --- R7 (NEW): strip leftover [cleaned: ...] tags từ lần ingest trước ---
+        fixed_text = _CLEANED_TAG.sub("", fixed_text).strip()
 
         seq += 1
         cleaned.append(
