@@ -1,0 +1,100 @@
+{
+  "task": "Quy trình xử lý sự cố P1 gồm mấy bước và bước đầu tiên là gì?",
+  "route_reason": "SLA/incident keyword matched: ['p1', 'sự cố', 'xử lý sự cố']",
+  "risk_high": false,
+  "needs_tool": false,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "Bước 1: Tiếp nhận\nOn-call engineer nhận alert hoặc ticket, xác nhận severity trong 5 phút.\n\nBước 2: Thông báo\nGửi thông báo tới Slack #incident-p1 và email incident@company.internal ngay lập tức.\n\nBước 3: Triage và phân công\nLead Engineer phân công engineer xử lý trong 10 phút.\n\nBước 4: Xử lý\nEngineer cập nhật tiến độ lên ticket mỗi 30 phút. Nếu cần hỗ trợ thêm, escalate ngay.\n\nBước 5: Resolution\nSau khi khắc phục, viết incident report trong vòng 24 giờ.",
+      "source": "support/sla-p1-2026.pdf",
+      "score": 0.5137,
+      "metadata": {
+        "access": "internal",
+        "section": "Phần 3: Quy trình xử lý sự cố P1",
+        "effective_date": "2026-01-15",
+        "department": "IT",
+        "source": "support/sla-p1-2026.pdf"
+      }
+    },
+    {
+      "text": "Ticket P1:\n- Phản hồi ban đầu (first response): 15 phút kể từ khi ticket được tạo.\n- Xử lý và khắc phục (resolution): 4 giờ.\n- Escalation: Tự động escalate lên Senior Engineer nếu không có phản hồi trong 10 phút.\n- Thông báo stakeholder: Ngay khi nhận ticket, update mỗi 30 phút cho đến khi resolve.\n\nTicket P2:\n- Phản hồi ban đầu: 2 giờ.\n- Xử lý và khắc phục: 1 ngày làm việc.\n- Escalation: Tự động escalate sau 90 phút không có phản hồi.\n\nTicket P3:\n- Phản hồi ban đầu: 1 ngày làm việc.\n- Xử lý và khắc phục: 5 ngày làm việc.\n\nTicket P4:\n- Phản hồi ban đầu: 3 ngày làm việc.\n- Xử lý và khắc phục: Theo sprint cycle (thông thường 2-4 tuần).",
+      "source": "support/sla-p1-2026.pdf",
+      "score": 0.4748,
+      "metadata": {
+        "source": "support/sla-p1-2026.pdf",
+        "department": "IT",
+        "section": "Phần 2: SLA theo mức độ ưu tiên",
+        "effective_date": "2026-01-15",
+        "access": "internal"
+      }
+    },
+    {
+      "text": "P1 — CRITICAL (Khẩn cấp):\nĐịnh nghĩa: Sự cố ảnh hưởng toàn bộ hệ thống production, không có workaround.\nVí dụ: Database sập, API gateway down, toàn bộ người dùng không thể đăng nhập.\n\nP2 — HIGH (Nghiêm trọng):\nĐịnh nghĩa: Sự cố ảnh hưởng một phần hệ thống, có workaround tạm thời.\nVí dụ: Một số tính năng không hoạt động, ảnh hưởng một nhóm người dùng.\n\nP3 — MEDIUM (Trung bình):\nĐịnh nghĩa: Lỗi ảnh hưởng không đáng kể, người dùng vẫn làm việc được.\n\nP4 — LOW (Thấp):\nĐịnh nghĩa: Yêu cầu cải tiến, gợi ý, hoặc lỗi giao diện nhỏ.",
+      "source": "support/sla-p1-2026.pdf",
+      "score": 0.465,
+      "metadata": {
+        "source": "support/sla-p1-2026.pdf",
+        "section": "Phần 1: Định nghĩa mức độ ưu tiên",
+        "department": "IT",
+        "effective_date": "2026-01-15",
+        "access": "internal"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "support/sla-p1-2026.pdf"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "final_answer": "Quy trình xử lý sự cố P1 gồm 5 bước, và bước đầu tiên là:\n\n- **Bước 1: Tiếp nhận**\n  - On-call engineer nhận alert hoặc ticket, xác nhận severity trong 5 phút [1].\n\nCác bước tiếp theo trong quy trình xử lý sự cố P1 là:\n\n- **Bước 2: Thông báo**\n  - Gửi thông báo tới Slack #incident-p1 và email incident@company.internal ngay lập tức.\n\n- **Bước 3: Triage và phân công**\n  - Lead Engineer phân công engineer xử lý trong 10 phút.\n\n- **Bước 4: Xử lý**\n  - Engineer cập nhật tiến độ lên ticket mỗi 30 phút. Nếu cần hỗ trợ thêm, escalate ngay.\n\n- **Bước 5: Resolution**\n  - Sau khi khắc phục, viết incident report trong vòng 24 giờ.",
+  "sources": [],
+  "confidence": 1.0,
+  "history": [
+    "[supervisor] received task: Quy trình xử lý sự cố P1 gồm mấy bước và bước đầu tiên là gì?",
+    "[supervisor] route=retrieval_worker | reason=SLA/incident keyword matched: ['p1', 'sự cố', 'xử lý sự cố']",
+    "[retrieval_worker] retrieved 3 chunks from ['support/sla-p1-2026.pdf']",
+    "[synthesis_worker] confidence=1.0",
+    "[graph] completed in 5768ms | workers=['retrieval_worker', 'synthesis_worker'] | confidence=1.0"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 5768,
+  "run_id": "run_20260414_162441",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Quy trình xử lý sự cố P1 gồm mấy bước và bước đầu tiên là gì?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "support/sla-p1-2026.pdf"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Quy trình xử lý sự cố P1 gồm mấy bước và bước đầu tiên là gì?",
+        "chunks_count": 3,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 626,
+        "sources": [
+          "support/sla-p1-2026.pdf"
+        ],
+        "confidence": 1.0
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q08"
+}

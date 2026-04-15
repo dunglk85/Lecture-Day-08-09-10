@@ -17,6 +17,20 @@ Gọi độc lập để test:
 
 import os
 import sys
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
+
+# Add parent directory to sys.path to allow importing from index.py
+sys.path.append(str(Path(__file__).parent.parent))
+
+try:
+    from index import CHROMA_DB_DIR
+except ImportError:
+    # Fallback if import fails
+    CHROMA_DB_DIR = str(Path(__file__).parent.parent / "chroma_db")
 
 # ─────────────────────────────────────────────
 # Worker Contract (xem contracts/worker_contracts.yaml)
@@ -27,78 +41,86 @@ import sys
 WORKER_NAME = "retrieval_worker"
 DEFAULT_TOP_K = 3
 
-
 def _get_embedding_fn():
     """
     Trả về embedding function.
-    TODO Sprint 1: Implement dùng OpenAI hoặc Sentence Transformers.
+    Ưu tiên OpenAI nếu có API key, nếu không dùng Sentence Transformers (nếu cài), 
+    cuối cùng là random (chỉ để test cấu trúc).
     """
-    # Option A: Sentence Transformers (offline, không cần API key)
+    
+    # 1. Thử OpenAI
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        try:
+            from openai import OpenAI
+            client = OpenAI(api_key=api_key)
+            def embed(text: str) -> list:
+                if not text.strip(): return [0.0] * 1536
+                resp = client.embeddings.create(input=text, model="text-embedding-3-small")
+                return resp.data[0].embedding
+            return embed
+        except ImportError:
+            print("⚠️  OpenAI library not found. Falling back...")
+        except Exception as e:
+            print(f"⚠️  OpenAI client error: {e}")
+
+    # 2. Thử Sentence Transformers (offline)
     try:
         from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer("all-MiniLM-L6-v2")
-        def embed(text: str) -> list:
-            return model.encode([text])[0].tolist()
-        return embed
+        # model = SentenceTransformer("all-MiniLM-L6-v2") # 384 dim
+        # Lưu ý: Nếu index dùng OpenAI (1536 dim) mà retrieval dùng ST (384 dim), sẽ lỗi.
+        # Chúng ta giả định dùng cùng loại đã build ở index.py
+        model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2") # match some patterns
+        def embed_st(text: str) -> list:
+            return model.encode(text).tolist()
+        return embed_st
     except ImportError:
         pass
 
-    # Option B: OpenAI (cần API key)
-    try:
-        from openai import OpenAI
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        def embed(text: str) -> list:
-            resp = client.embeddings.create(input=text, model="text-embedding-3-small")
-            return resp.data[0].embedding
-        return embed
-    except ImportError:
-        pass
-
-    # Fallback: random embeddings cho test (KHÔNG dùng production)
+    # 3. Fallback: random embeddings (Coi chừng dimension mismatch)
     import random
-    def embed(text: str) -> list:
-        return [random.random() for _ in range(384)]
-    print("⚠️  WARNING: Using random embeddings (test only). Install sentence-transformers.")
-    return embed
+    # Match OpenAI text-embedding-3-small dimension (1536)
+    def embed_random(text: str) -> list:
+        return [random.random() for _ in range(1536)]
+    print("⚠️  CRITICAL WARNING: Using RANDOM embeddings. Retrieval will NOT yield meaningful results.")
+    return embed_random
 
 
 def _get_collection():
     """
     Kết nối ChromaDB collection.
-    TODO Sprint 2: Đảm bảo collection đã được build từ Step 3 trong README.
     """
     import chromadb
-    client = chromadb.PersistentClient(path="./chroma_db")
+    client = chromadb.PersistentClient(path=str(CHROMA_DB_DIR))
     try:
-        collection = client.get_collection("day09_docs")
+        collection = client.get_collection("rag_lab")
     except Exception:
         # Auto-create nếu chưa có
         collection = client.get_or_create_collection(
-            "day09_docs",
+            "rag_lab",
             metadata={"hnsw:space": "cosine"}
         )
-        print(f"⚠️  Collection 'day09_docs' chưa có data. Chạy index script trong README trước.")
+        print(f"⚠️  Collection 'rag_lab' chưa có data. Chạy index script trước.")
     return collection
 
 
 def retrieve_dense(query: str, top_k: int = DEFAULT_TOP_K) -> list:
     """
     Dense retrieval: embed query → query ChromaDB → trả về top_k chunks.
-
-    TODO Sprint 2: Implement phần này.
-    - Dùng _get_embedding_fn() để embed query
-    - Query collection với n_results=top_k
-    - Format result thành list of dict
-
-    Returns:
-        list of {"text": str, "source": str, "score": float, "metadata": dict}
     """
-    # TODO: Implement dense retrieval
-    embed = _get_embedding_fn()
-    query_embedding = embed(query)
+    if not query.strip():
+        return []
 
     try:
+        embed_fn = _get_embedding_fn()
+        query_embedding = embed_fn(query)
+
         collection = _get_collection()
+        item_count = collection.count()
+        if item_count == 0:
+            print(f"⚠️  Collection is empty!")
+            return []
+
         results = collection.query(
             query_embeddings=[query_embedding],
             n_results=top_k,
@@ -106,34 +128,31 @@ def retrieve_dense(query: str, top_k: int = DEFAULT_TOP_K) -> list:
         )
 
         chunks = []
-        for i, (doc, dist, meta) in enumerate(zip(
-            results["documents"][0],
-            results["distances"][0],
-            results["metadatas"][0]
-        )):
-            chunks.append({
-                "text": doc,
-                "source": meta.get("source", "unknown"),
-                "score": round(1 - dist, 4),  # cosine similarity
-                "metadata": meta,
-            })
+        if results and results.get("documents") and len(results["documents"][0]) > 0:
+            for i in range(len(results["documents"][0])):
+                doc = results["documents"][0][i]
+                dist = results["distances"][0][i]
+                meta = results["metadatas"][0][i]
+                
+                chunks.append({
+                    "text": doc,
+                    "source": meta.get("source", "unknown"),
+                    "score": round(1 - dist, 4),  # cosine similarity
+                    "metadata": meta,
+                })
+        else:
+            print(f"ℹ️  No results found for query: {query[:50]}...")
+            
         return chunks
 
     except Exception as e:
-        print(f"⚠️  ChromaDB query failed: {e}")
-        # Fallback: return empty (abstain)
+        print(f"❌ ChromaDB query failed: {e}")
         return []
 
 
 def run(state: dict) -> dict:
     """
-    Worker entry point — gọi từ graph.py.
-
-    Args:
-        state: AgentState dict
-
-    Returns:
-        Updated AgentState với retrieved_chunks và retrieved_sources
+    Worker entry point.
     """
     task = state.get("task", "")
     top_k = state.get("retrieval_top_k", DEFAULT_TOP_K)
@@ -143,7 +162,6 @@ def run(state: dict) -> dict:
 
     state["workers_called"].append(WORKER_NAME)
 
-    # Log worker IO (theo contract)
     worker_io = {
         "worker": WORKER_NAME,
         "input": {"task": task, "top_k": top_k},
@@ -153,7 +171,6 @@ def run(state: dict) -> dict:
 
     try:
         chunks = retrieve_dense(task, top_k=top_k)
-
         sources = list({c["source"] for c in chunks})
 
         state["retrieved_chunks"] = chunks
@@ -173,15 +190,9 @@ def run(state: dict) -> dict:
         state["retrieved_sources"] = []
         state["history"].append(f"[{WORKER_NAME}] ERROR: {e}")
 
-    # Ghi worker IO vào state để trace
     state.setdefault("worker_io_logs", []).append(worker_io)
-
     return state
 
-
-# ─────────────────────────────────────────────
-# Test độc lập
-# ─────────────────────────────────────────────
 
 if __name__ == "__main__":
     print("=" * 50)

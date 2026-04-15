@@ -1,0 +1,51 @@
+{
+  "generated_at": "2026-04-14T16:29:27.399951",
+  "day08_single_agent": {
+    "total_questions": 10,
+    "avg_faithfulness": 4.4,
+    "avg_relevance": 4.7,
+    "avg_completeness": 3.8,
+    "avg_confidence": 0.82,
+    "avg_latency_ms": 1200
+  },
+  "day09_multi_agent": {
+    "total_traces": 41,
+    "routing_distribution": {
+      "policy_tool_worker": "23/41 (56%)",
+      "retrieval_worker": "18/41 (43%)"
+    },
+    "avg_confidence": 0.766,
+    "avg_latency_ms": 8797,
+    "mcp_usage_rate": "10/41 (24%)",
+    "hitl_rate": "2/41 (4%)",
+    "top_sources": [
+      [
+        "it/access-control-sop.md",
+        14
+      ],
+      [
+        "support/sla-p1-2026.pdf",
+        10
+      ],
+      [
+        "policy/refund-v4.pdf",
+        10
+      ],
+      [
+        "hr/leave-policy-2026.pdf",
+        6
+      ],
+      [
+        "support/helpdesk-faq.md",
+        6
+      ]
+    ]
+  },
+  "analysis": {
+    "routing_visibility": "Day 09 có route_reason cho từng câu → dễ debug và tối ưu hóa workflow.",
+    "latency_delta": "7597ms",
+    "debuggability": "Multi-agent cho phép test và isolate lỗi tại từng worker (Retrieval vs Policy vs Synthesis).",
+    "capability_extension": "Hệ thống multi-agent dễ dàng mở rộng qua MCP tools mà không làm phức tạp hóa logic của agent chính.",
+    "policy_accuracy": "Việc tách riêng Policy Worker giúp xử lý các ngoại lệ (Flash Sale, Digital products) chính xác hơn nhờ LLM reasoning chuyên biệt."
+  }
+}

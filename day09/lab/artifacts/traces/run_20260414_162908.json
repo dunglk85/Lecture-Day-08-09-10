@@ -1,0 +1,103 @@
+{
+  "task": "Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá nhân. Điều kiện là gì?",
+  "route_reason": "no specific keyword matched, default to retrieval",
+  "risk_high": false,
+  "needs_tool": false,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "4.1 Điều kiện remote:\n- Nhân viên sau probation period có thể làm remote tối đa 2 ngày/tuần.\n- Team Lead phải phê duyệt lịch remote qua HR Portal.\n- Ngày onsite bắt buộc: Thứ 3 và Thứ 5 theo lịch team.\n\n4.2 Yêu cầu kỹ thuật khi remote:\n- Kết nối VPN bắt buộc khi làm việc với hệ thống nội bộ.\n- Camera bật trong các cuộc họp team.",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.7449,
+      "metadata": {
+        "source": "hr/leave-policy-2026.pdf",
+        "access": "internal",
+        "department": "HR",
+        "effective_date": "2026-01-01",
+        "section": "Phần 4: Remote work policy"
+      }
+    },
+    {
+      "text": "Bước 1: Nhân viên gửi yêu cầu nghỉ phép qua hệ thống HR Portal (https://hr.company.internal) ít nhất 3 ngày làm việc trước ngày nghỉ.\nBước 2: Line Manager phê duyệt hoặc từ chối trong vòng 1 ngày làm việc.\nBước 3: Nhân viên nhận thông báo qua email sau khi được phê duyệt.\n\nTrường hợp khẩn cấp: Có thể gửi yêu cầu muộn hơn nhưng phải được Line Manager đồng ý qua tin nhắn trực tiếp.",
+      "source": "hr/leave-policy-2026.pdf",
+      "score": 0.4971,
+      "metadata": {
+        "access": "internal",
+        "department": "HR",
+        "section": "Phần 2: Quy trình xin nghỉ phép",
+        "effective_date": "2026-01-01",
+        "source": "hr/leave-policy-2026.pdf"
+      }
+    },
+    {
+      "text": "Quyền phải được thu hồi trong các trường hợp:\n- Nhân viên nghỉ việc: Thu hồi ngay trong ngày cuối.\n- Hết hạn contract: Thu hồi đúng ngày hết hạn.\n- Chuyển bộ phận: Điều chỉnh trong 3 ngày làm việc.",
+      "source": "it/access-control-sop.md",
+      "score": 0.475,
+      "metadata": {
+        "effective_date": "2026-01-01",
+        "department": "IT Security",
+        "section": "Section 5: Thu hồi quyền truy cập",
+        "source": "it/access-control-sop.md",
+        "access": "internal"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "hr/leave-policy-2026.pdf",
+    "it/access-control-sop.md"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "final_answer": "Tôi xin lỗi, thông tin này không có trong tài liệu nội bộ. Theo quy định hiện tại, chỉ những nhân viên đã hoàn thành thời gian thử việc (probation period) mới có thể làm việc từ xa (remote). Do đó, nhân viên trong thời gian thử việc không đủ điều kiện để yêu cầu làm remote. \n\nNếu bạn cần thêm thông tin hoặc có câu hỏi khác, vui lòng cho tôi biết!",
+  "sources": [],
+  "confidence": 0.8,
+  "history": [
+    "[supervisor] received task: Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá ",
+    "[supervisor] route=retrieval_worker | reason=no specific keyword matched, default to retrieval",
+    "[retrieval_worker] retrieved 3 chunks from ['hr/leave-policy-2026.pdf', 'it/access-control-sop.md']",
+    "[synthesis_worker] confidence=0.8",
+    "[graph] completed in 5079ms | workers=['retrieval_worker', 'synthesis_worker'] | confidence=0.8"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 5079,
+  "run_id": "run_20260414_162908",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá nhân. Điều kiện là gì?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "it/access-control-sop.md"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Nhân viên vừa vào thử việc (trong probation period) muốn làm remote vì lý do cá nhân. Điều kiện là gì?",
+        "chunks_count": 3,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 348,
+        "sources": [
+          "hr/leave-policy-2026.pdf",
+          "it/access-control-sop.md"
+        ],
+        "confidence": 0.8
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q14"
+}

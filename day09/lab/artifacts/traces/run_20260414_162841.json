@@ -1,0 +1,125 @@
+{
+  "task": "Khách hàng đặt đơn ngày 31/01/2026 và yêu cầu hoàn tiền ngày 07/02/2026. Sản phẩm lỗi nhà sản xuất, chưa kích hoạt, không phải Flash Sale. Được hoàn tiền không?",
+  "route_reason": "policy keyword matched: ['hoàn tiền', 'flash sale']",
+  "risk_high": false,
+  "needs_tool": true,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "Khách hàng được quyền yêu cầu hoàn tiền khi đáp ứng đủ các điều kiện sau:\n- Sản phẩm bị lỗi do nhà sản xuất, không phải do người dùng.\n- Yêu cầu được gửi trong vòng 7 ngày làm việc kể từ thời điểm xác nhận đơn hàng.\n- Đơn hàng chưa được sử dụng hoặc chưa bị mở seal.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.6411,
+      "metadata": {
+        "effective_date": "2026-02-01",
+        "source": "policy/refund-v4.pdf",
+        "access": "internal",
+        "section": "Điều 2: Điều kiện được hoàn tiền",
+        "department": "CS"
+      }
+    },
+    {
+      "text": "Hoàn tiền — Điều kiện áp dụng:\nYêu cầu được gửi trong vòng 7 ngày kể từ thời điểm xác nhận đơn hàng.\n\nNgoại lệ không được hoàn tiền:\n- Sản phẩm thuộc danh mục hàng kỹ thuật số (license key, subscription).\n- Đơn hàng đã áp dụng mã giảm giá đặc biệt theo chương trình khuyến mãi Flash Sale.\n- Sản phẩm đã được kích hoạt hoặc đăng ký tài khoản.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.6272,
+      "metadata": {
+        "section": "Điều 3: Điều kiện áp dụng và ngoại lệ",
+        "access": "internal",
+        "department": "CS",
+        "effective_date": "2026-02-01",
+        "source": "policy/refund-v4.pdf"
+      }
+    },
+    {
+      "text": "Chính sách này áp dụng cho tất cả các đơn hàng được đặt trên hệ thống nội bộ kể từ ngày 01/02/2026.\nCác đơn hàng đặt trước ngày có hiệu lực sẽ áp dụng theo chính sách hoàn tiền phiên bản 3.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.5314,
+      "metadata": {
+        "access": "internal",
+        "section": "Điều 1: Phạm vi áp dụng",
+        "effective_date": "2026-02-01",
+        "source": "policy/refund-v4.pdf",
+        "department": "CS"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "policy/refund-v4.pdf"
+  ],
+  "policy_result": {
+    "policy_applies": false,
+    "policy_name": "Chính sách hoàn tiền",
+    "exceptions_found": [],
+    "explanation": "Đơn hàng được đặt vào ngày 31/01/2026, trước thời điểm áp dụng chính sách mới (01/02/2026), do đó sẽ áp dụng chính sách hoàn tiền phiên bản 3 cũ. Theo chính sách cũ, khách hàng có quyền yêu cầu hoàn tiền cho sản phẩm lỗi nhà sản xuất trong vòng 7 ngày kể từ ngày xác nhận đơn hàng. Khách hàng đã yêu cầu hoàn tiền vào ngày 07/02/2026, tức là trong thời gian cho phép, và sản phẩm chưa được kích hoạt, do đó khách hàng được hoàn tiền.",
+    "source": [
+      "policy/refund-v4.pdf"
+    ],
+    "policy_version_note": ""
+  },
+  "mcp_tools_used": [],
+  "final_answer": "Dựa trên thông tin từ tài liệu nội bộ, khách hàng có thể được hoàn tiền cho đơn hàng của mình với các điều kiện sau:\n\n- Sản phẩm bị lỗi do nhà sản xuất.\n- Yêu cầu hoàn tiền được gửi trong vòng 7 ngày làm việc kể từ thời điểm xác nhận đơn hàng.\n- Đơn hàng chưa được sử dụng hoặc chưa bị mở seal.\n\nTrong trường hợp này:\n- Khách hàng đặt đơn vào ngày 31/01/2026 và yêu cầu hoàn tiền vào ngày 07/02/2026, tức là yêu cầu được gửi trong vòng 7 ngày.\n- Sản phẩm lỗi nhà sản xuất và chưa kích hoạt.\n\nVì vậy, khách hàng đủ điều kiện để được hoàn tiền cho đơn hàng này. \n\nXin lưu ý rằng chính sách hoàn tiền này áp dụng cho các đơn hàng được đặt trên hệ thống nội bộ kể từ ngày 01/02/2026, nhưng do đơn hàng này được đặt trước ngày có hiệu lực, nên sẽ áp dụng theo chính sách hoàn tiền phiên bản 3 [3]. \n\nTóm lại, khách hàng được hoàn tiền cho sản phẩm này.",
+  "sources": [],
+  "confidence": 0.7,
+  "history": [
+    "[supervisor] received task: Khách hàng đặt đơn ngày 31/01/2026 và yêu cầu hoàn tiền ngày 07/02/2026. Sản phẩ",
+    "[supervisor] route=policy_tool_worker | reason=policy keyword matched: ['hoàn tiền', 'flash sale']",
+    "[retrieval_worker] retrieved 3 chunks from ['policy/refund-v4.pdf']",
+    "[policy_tool_worker] Policy checked, 0 MCP tools called.",
+    "[synthesis_worker] confidence=0.7",
+    "[graph] completed in 14975ms | workers=['retrieval_worker', 'policy_tool_worker', 'synthesis_worker'] | confidence=0.7"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "policy_tool_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "policy_tool_worker",
+  "latency_ms": 14975,
+  "run_id": "run_20260414_162841",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Khách hàng đặt đơn ngày 31/01/2026 và yêu cầu hoàn tiền ngày 07/02/2026. Sản phẩm lỗi nhà sản xuất, chưa kích hoạt, không phải Flash Sale. Được hoàn tiền không?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "policy/refund-v4.pdf"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "policy_tool_worker",
+      "input": {
+        "task": "Khách hàng đặt đơn ngày 31/01/2026 và yêu cầu hoàn tiền ngày 07/02/2026. Sản phẩm lỗi nhà sản xuất, chưa kích hoạt, không phải Flash Sale. Được hoàn tiền không?",
+        "chunks_count": 3,
+        "needs_tool": true
+      },
+      "output": {
+        "policy_applies": false,
+        "exceptions": 0,
+        "mcp_calls": 0
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Khách hàng đặt đơn ngày 31/01/2026 và yêu cầu hoàn tiền ngày 07/02/2026. Sản phẩm lỗi nhà sản xuất, chưa kích hoạt, không phải Flash Sale. Được hoàn tiền không?",
+        "chunks_count": 3,
+        "has_policy": true
+      },
+      "output": {
+        "answer_length": 847,
+        "sources": [
+          "policy/refund-v4.pdf"
+        ],
+        "confidence": 0.7
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q12"
+}

@@ -1,0 +1,125 @@
+{
+  "task": "Store credit khi hoàn tiền có giá trị bao nhiêu so với tiền gốc?",
+  "route_reason": "policy keyword matched: ['hoàn tiền', 'store credit']",
+  "risk_high": false,
+  "needs_tool": true,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "- Hoàn tiền qua phương thức thanh toán gốc: áp dụng trong 100% trường hợp đủ điều kiện.\n- Hoàn tiền qua credit nội bộ (store credit): khách hàng có thể chọn nhận store credit thay thế với giá trị 110% so với số tiền hoàn.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.6471,
+      "metadata": {
+        "source": "policy/refund-v4.pdf",
+        "department": "CS",
+        "section": "Điều 5: Hình thức hoàn tiền",
+        "access": "internal",
+        "effective_date": "2026-02-01"
+      }
+    },
+    {
+      "text": "Hoàn tiền — Điều kiện áp dụng:\nYêu cầu được gửi trong vòng 7 ngày kể từ thời điểm xác nhận đơn hàng.\n\nNgoại lệ không được hoàn tiền:\n- Sản phẩm thuộc danh mục hàng kỹ thuật số (license key, subscription).\n- Đơn hàng đã áp dụng mã giảm giá đặc biệt theo chương trình khuyến mãi Flash Sale.\n- Sản phẩm đã được kích hoạt hoặc đăng ký tài khoản.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.4394,
+      "metadata": {
+        "access": "internal",
+        "department": "CS",
+        "source": "policy/refund-v4.pdf",
+        "effective_date": "2026-02-01",
+        "section": "Điều 3: Điều kiện áp dụng và ngoại lệ"
+      }
+    },
+    {
+      "text": "Chính sách này áp dụng cho tất cả các đơn hàng được đặt trên hệ thống nội bộ kể từ ngày 01/02/2026.\nCác đơn hàng đặt trước ngày có hiệu lực sẽ áp dụng theo chính sách hoàn tiền phiên bản 3.",
+      "source": "policy/refund-v4.pdf",
+      "score": 0.3878,
+      "metadata": {
+        "effective_date": "2026-02-01",
+        "department": "CS",
+        "section": "Điều 1: Phạm vi áp dụng",
+        "access": "internal",
+        "source": "policy/refund-v4.pdf"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "policy/refund-v4.pdf"
+  ],
+  "policy_result": {
+    "policy_applies": false,
+    "policy_name": "Refund Policy",
+    "exceptions_found": [],
+    "explanation": "Câu hỏi không vi phạm quy định nào và không có ngoại lệ nào áp dụng. Câu hỏi chỉ yêu cầu thông tin về giá trị store credit khi hoàn tiền, không liên quan đến các sản phẩm hoặc đơn hàng cụ thể.",
+    "source": [
+      "policy/refund-v4.pdf"
+    ],
+    "policy_version_note": ""
+  },
+  "mcp_tools_used": [],
+  "final_answer": "Khi hoàn tiền, nếu khách hàng chọn nhận store credit, giá trị của store credit sẽ là 110% so với số tiền gốc mà khách hàng đã thanh toán. Điều này có nghĩa là khách hàng sẽ nhận được nhiều hơn 10% so với số tiền họ đã chi trả ban đầu [1]. \n\nNếu bạn cần thêm thông tin hoặc có câu hỏi khác, hãy cho tôi biết!",
+  "sources": [],
+  "confidence": 0.8,
+  "history": [
+    "[supervisor] received task: Store credit khi hoàn tiền có giá trị bao nhiêu so với tiền gốc?",
+    "[supervisor] route=policy_tool_worker | reason=policy keyword matched: ['hoàn tiền', 'store credit']",
+    "[retrieval_worker] retrieved 3 chunks from ['policy/refund-v4.pdf']",
+    "[policy_tool_worker] Policy checked, 0 MCP tools called.",
+    "[synthesis_worker] confidence=0.8",
+    "[graph] completed in 6731ms | workers=['retrieval_worker', 'policy_tool_worker', 'synthesis_worker'] | confidence=0.8"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "policy_tool_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "policy_tool_worker",
+  "latency_ms": 6731,
+  "run_id": "run_20260414_162829",
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Store credit khi hoàn tiền có giá trị bao nhiêu so với tiền gốc?",
+        "top_k": 3
+      },
+      "output": {
+        "chunks_count": 3,
+        "sources": [
+          "policy/refund-v4.pdf"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "policy_tool_worker",
+      "input": {
+        "task": "Store credit khi hoàn tiền có giá trị bao nhiêu so với tiền gốc?",
+        "chunks_count": 3,
+        "needs_tool": true
+      },
+      "output": {
+        "policy_applies": false,
+        "exceptions": 0,
+        "mcp_calls": 0
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Store credit khi hoàn tiền có giá trị bao nhiêu so với tiền gốc?",
+        "chunks_count": 3,
+        "has_policy": true
+      },
+      "output": {
+        "answer_length": 307,
+        "sources": [
+          "policy/refund-v4.pdf"
+        ],
+        "confidence": 0.8
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q10"
+}
